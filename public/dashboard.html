@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SCADA - Protheus</title>
+  <style>
+    :root {
+      --color-primario: #0066cc;
+      height: 100vh;
+      --color-secundario: #0072ff;
+      --color-texto: #333;
+      --color-fondo: #f4f4f4;
+      --color-borde: #eaeaea;
+      --color-hover: #005bb5;
+      --sombra: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    html, body {
+      height: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-fondo);
+      color: var(--color-texto);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--color-primario);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    nav {
+      background: #ddd;
+      padding: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      position: sticky;
+      top: 60px;
+      z-index: 99;
+    }
+
+    nav a, .dropdown-productos > a {
+      text-decoration: none;
+      background: #fff;
+      padding: 0.5rem;
+      border-radius: 5px;
+      color: var(--color-texto);
+      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex-grow: 1;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      transition: background 0.2s, color 0.2s;
+      display: inline-block;
+    }
+
+    nav a:hover, .dropdown-productos > a:hover {
+      background: var(--color-primario);
+      color: white;
+    }
+
+    /* Dropdown estilos */
+    .dropdown-productos {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-productos .dropdown-menu {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 110%;
+      min-width: 160px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      border-radius: 6px;
+      z-index: 1001;
+      padding: 0.3rem 0;
+      font-size: 0.97rem;
+      transition: opacity 0.2s;
+    }
+    .dropdown-productos:hover .dropdown-menu,
+    .dropdown-productos:focus-within .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      color: var(--color-texto);
+      text-decoration: none;
+      border-bottom: 1px solid #f0f0f0;
+      background: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: left;
+      border-radius: 0;
+    }
+    .dropdown-menu a:last-child {
+      border-bottom: none;
+    }
+    .dropdown-menu a:hover {
+      background: var(--color-primario);
+      color: #fff;
+    }
+
+    main {
+      padding: 1rem;
+      text-align: center;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      height: 100%;
+    }
+
+    .error {
+      color: red;
+      margin-top: 1rem;
+    }
+
+    .datatable-search {
+      margin: 1rem auto;
+      text-align: center;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f9f9f9;
+      padding: 0.5rem;
+      border-radius: 8px;
+      box-shadow: var(--sombra);
+      border: 1px solid var(--color-borde);
+      transition: background 0.3s ease;
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+    }
+
+    .datatable-search input {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .acciones {
+      margin: 0 auto 1rem;
+      text-align: center;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .acciones button {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      background: var(--color-secundario);
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      flex-grow: 1;
+      max-width: 150px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .acciones button:hover {
+      background: var(--color-hover);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    /* Estilos para el modal de productos */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: auto;
+      background: rgba(0,0,0,0.3);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.activo {
+      display: flex;
+    }
+    .modal-contenido {
+      background: #fff;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      min-width: 320px;
+      max-width: 95vw;
+      position: relative;
+      text-align: left;
+    }
+    .modal-cerrar {
+      position: absolute;
+      top: 0.7rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-contenido h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: var(--color-primario);
+    }
+    .modal-form label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+      color: #333;
+    }
+    .modal-form input, .modal-form select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      box-sizing: border-box;
+    }
+    .modal-form button[type="submit"] {
+      margin-top: 1rem;
+      background: var(--color-primario);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-form button[type="submit"]:hover {
+      background: var(--color-hover);
+    }
+    .dropdown-productos {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: #fff;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      border-radius: 6px;
+      z-index: 1001;
+      padding: 0.3rem 0;
+      font-size: 0.97rem;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      color: var(--color-texto);
+      text-decoration: none;
+      border-bottom: 1px solid #f0f0f0;
+      background: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dropdown-menu a:last-child {
+      border-bottom: none;
+    }
+    .dropdown-menu a:hover {
+      background: var(--color-primario);
+      color: #fff;
+    }
+    /* Ajusta el contenedor para scroll vertical */
+    .tabla-container {
+      flex: 1 1 auto;
+      height: 500px;         /* Puedes ajustar este valor según tu diseño */
+      max-height: 80vh;      /* O usa un porcentaje de la ventana */
+      overflow-y: auto;
+      margin: 0;
+      width: 100%;
+      border-radius: 0;
+      box-shadow: var(--sombra);
+      background: rgb(255, 255, 255);
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--color-borde);
+      background: linear-gradient(135deg, #e0e7ff 0%, #f4f4f4 100%);
+      padding: 0;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+    }
+
+    /* Elimina border-radius y overflow de la tabla */
+    table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      /* border-radius: 0;  <-- Elimina o comenta esta línea */
+      /* overflow: hidden;  <-- Elimina o comenta esta línea */
+      margin: 0 auto;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    th, td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid var(--color-borde);
+      text-align: left;
+      color: var(--color-texto);
+      font-weight: normal;
+    }
+
+    th {
+      background: linear-gradient(90deg, var(--color-secundario) 0%, #00c6ff 100%);
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    tbody tr:hover {
+      background: #f0f8ff;
+      cursor: pointer;
+    }
+
+    /* Estilos específicos para móviles */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.2rem;
+      }
+
+      nav {
+        top: 52px;
+        padding: 0.5rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+      }
+
+      nav a, .dropdown-productos > a {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      main {
+        padding: 0.5rem;
+      }
+
+      .tabla-container {
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: linear-gradient(135deg, #e0e7ff 0%, #f4f4f4 100%);
+        border-radius: 12px 12px 0 0;
+        border: 1px solid #d1d5db;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      table {
+        font-size: 0.8rem;
+        border-radius: 0;
+        box-shadow: none;
+        width: 100%;
+        margin: 0;
+        border: none;
+        background: transparent;
+        height: 100%;
+      }
+
+      th, td {
+        padding: 0.5rem 0.3rem;
+        border-bottom: 1px solid var(--color-borde);
+        text-align: left;
+        font-weight: normal;
+      }
+
+      /* Estilo para tabla responsive en móviles */
+      .responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.563);
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .responsive-table thead {
+        display: none;
+      }
+
+      .responsive-table tr {
+        display: block;
+        margin-bottom: 0.5rem;
+        border-bottom: 2px solid var(--color-borde);
+      }
+
+      .responsive-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #eee;
+        text-align: right;
+        position: relative;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 0.5rem;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .responsive-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: var(--color-secundario);
+        margin-right: 1rem;
+        text-align: left;
+        flex: 1;
+      }
+      /* Dropdown en móviles */
+      .dropdown-productos .dropdown-menu {
+        min-width: 140px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Mensaje de carga */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      margin: 1rem auto;
+      width: 100%;
+      max-width: 400px;
+      padding: 1rem;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      font-size: 1.2rem;
+      color: var(--color-texto);
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--color-primario);
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mensaje sin datos */
+    .no-data {
+      padding: 2rem;
+      color: #666;
+      font-style: italic;
+      text-align: center;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 2rem auto;
+      width: 100%;
+      max-width: 600px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .semaforo {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      border: 2px solid #ccc;
+      box-shadow: 0 0 3px #888;
+    }
+    .semaforo-verde {
+      background: #2ecc40;
+      border-color: #27ae60;
+    }
+    .semaforo-amarillo {
+      background: #ffeb3b;
+      border-color: #fbc02d;
+    }
+    .semaforo-rojo {
+      background: #ff4136;
+      border-color: #c0392b;
+    }
+
+    .producto-inactivo {
+      background: #e0e0e0 !important;
+      color: #888 !important;
+      opacity: 0.7;
+    }
+
+    .producto-inactivo-dark {
+      background: #444 !important;
+      color: #fff !important;
+      opacity: 0.85;
+    }
+  </style>
+  <!-- Agrega esto en el <head> si aún no tienes SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <header>
+    <h1>Dashboard - SCADA / Protheus</h1>
+  </header>
+  <nav>
+    <a href="#" data-endpoint="/api/ordenes">Órdenes</a>
+    <a href="#" data-endpoint="/api/producciones">Producciones</a>
+    <a href="#" data-endpoint="/api/recetas">Recetas</a>
+    <div class="dropdown-productos">
+      <a href="#" data-endpoint="/api/productos">Productos</a>
+      <div class="dropdown-menu">
+        <a href="#" id="nuevo-producto">Nuevo Producto</a>
+      </div>
+    </div>
+    <a href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+  </nav>
+  <main>
+    <div id="mensaje-inicial" style="color:#888; margin:2rem 0;">Selecciona una opción del menú para ver los datos.</div>
+    <div class="datatable-search" id="busqueda" style="display:none;">
+      <!-- Caja de búsqueda eliminada -->
+    </div>
+    <div class="acciones" id="acciones" style="display:none;">
+      <!-- Botones de exportación eliminados -->
+    </div>
+    <div class="tabla-container" id="contenido"></div>
+  </main>
+
+  <div class="modal" id="modal-producto">
+    <div class="modal-contenido">
+      <button class="modal-cerrar" onclick="cerrarModalProducto()">&times;</button>
+      <h2 id="modal-titulo-producto">Nuevo Producto</h2>
+      <form id="form-producto" class="modal-form">
+        <label for="B1_COD">Código *</label>
+        <input type="text" id="B1_COD" name="B1_COD" maxlength="20" required>
+
+        <label for="B1_DESC">Descripción</label>
+        <input type="text" id="B1_DESC" name="B1_DESC" maxlength="60">
+
+        <label for="B1_UM">Unidad de Medida</label>
+        <input type="text" id="B1_UM" name="B1_UM" maxlength="6">
+
+        <label for="B1_GRUPO">Grupo</label>
+        <input type="text" id="B1_GRUPO" name="B1_GRUPO" maxlength="6">
+
+        <label for="B1_TIPO">Tipo</label>
+        <input type="text" id="B1_TIPO" name="B1_TIPO" maxlength="1">
+
+        <label for="B1_CODBAR">Código de Barras</label>
+        <input type="text" id="B1_CODBAR" name="B1_CODBAR" maxlength="30">
+
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Verificar autenticación
+    const token = localStorage.getItem("token");
+    if (!token) window.location.href = "login.html";
+
+    // Elementos del DOM
+    const contenido = document.getElementById("contenido");
+    // const tituloSeccion = document.getElementById("titulo-seccion");
+    // const inputBusqueda = document.getElementById("buscarInput");
+    // const divBusqueda = document.getElementById("busqueda");
+    // const divAcciones = document.getElementById("acciones");
+    const mensajeInicial = document.getElementById("mensaje-inicial");
+    let datosOriginales = [];
+    let endpointActual = '';
+    let intervaloRefresco = null; // <-- Agregado para el refresco automático
+
+    // Función para cerrar sesión
+    function cerrarSesion() {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+
+    // Mostrar mensaje sin datos
+    function mostrarSinDatos() {
+      contenido.innerHTML = `<p class="no-data">No hay datos disponibles.</p>`;
+    }
+
+    // Mostrar animación de carga (sin cambios)
+    function mostrarCarga() {
+      contenido.innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+        </div>
+      `;
+    }
+
+    // Función para cargar datos desde el endpoint
+    async function cargarDatos(endpoint, titulo) {
+      endpointActual = endpoint;
+      mostrarCarga();
+      try {
+        const res = await fetch(endpoint, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Sesión expirada',
+              text: 'Por favor inicia sesión nuevamente.'
+            }).then(() => cerrarSesion());
+            return;
+          }
+          throw new Error(`Error al cargar datos: ${res.statusText}`);
+        }
+
+        const datos = await res.json();
+        mostrarDatos(datos, titulo);
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message
+        });
+        console.error(error);
+      }
+    }
+
+    // Convertir tabla a formato responsive para móviles
+    function hacerTablaResponsive(tabla) {
+      if (window.innerWidth > 768) return tabla;
+      
+      const headers = [];
+      const thead = tabla.querySelector('thead');
+      if (thead) {
+        const ths = thead.querySelectorAll('th');
+        ths.forEach(th => headers.push(th.textContent));
+      }
+      
+      const tbody = tabla.querySelector('tbody');
+      if (tbody) {
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          cells.forEach((cell, index) => {
+            if (headers[index]) {
+              cell.setAttribute('data-label', headers[index]);
+            }
+          });
+        });
+      }
+      
+      tabla.classList.add('responsive-table');
+      return tabla;
+    }
+
+    // Mostrar datos en la tabla with semáforo
+    function mostrarDatos(datos, titulo = '') {
+      if (!Array.isArray(datos) || datos.length === 0) {
+        mostrarSinDatos();
+        return;
+      }
+
+      datosOriginales = datos;
+      mensajeInicial.style.display = "none";
+
+      const headers = Object.keys(datos[0]);
+      let htmlTabla = '<table><thead><tr>';
+
+      // Si es productos, agrega columna de acciones
+      if (endpointActual === "/api/productos") {
+        headers.forEach(header => {
+          htmlTabla += `<th>${header}</th>`;
+        });
+        htmlTabla += `<th>Acciones</th>`;
+      } else if (endpointActual === "/api/ordenes") {
+        htmlTabla += `<th></th>`;
+        headers.forEach(header => {
+          htmlTabla += `<th>${header}</th>`;
+        });
+      } else {
+        headers.forEach(header => {
+          htmlTabla += `<th>${header}</th>`;
+        });
+      }
+      htmlTabla += '</tr></thead><tbody>';
+
+      // Filas de datos
+      datos.forEach((row, idx) => {
+        let trClass = "";
+        if (endpointActual === "/api/productos" && esProductoInactivo(row)) {
+          trClass = ' class="producto-inactivo-dark"';
+        }
+
+        htmlTabla += `<tr${trClass}>`;
+
+        // Semáforo solo para órdenes
+        if (endpointActual === "/api/ordenes") {
+          let colorClass = '';
+          const cantidad = Number(row['CANTIDAD'] ?? 0);
+          const producido = Number(row['PRODUCIDO'] ?? 0);
+
+          if (producido === 0) {
+            colorClass = 'semaforo-verde';
+          } else if (producido > 0 && producido < cantidad) {
+            colorClass = 'semaforo-amarillo';
+          } else if (producido === cantidad && cantidad > 0) {
+            colorClass = 'semaforo-rojo';
+          } else {
+            colorClass = 'semaforo-verde';
+          }
+
+          htmlTabla += `<td><span class="semaforo ${colorClass}"></span></td>`;
+        }
+
+        headers.forEach(header => {
+          htmlTabla += `<td>${row[header] ?? '-'}</td>`;
+        });
+
+        // Acciones solo para productos
+        if (endpointActual === "/api/productos") {
+          htmlTabla += `<td>
+            <button class="btn-editar" data-codigo="${row.CODIGO}">✏️</button>
+            <button class="btn-activar" data-codigo="${row.CODIGO}" data-posipi="${row.B1_POSIPI ?? 0}">
+              ${(row.B1_POSIPI ?? "0") == "0" ? "🛑" : "✅"}
+            </button>
+          </td>`;
+        }
+
+        htmlTabla += '</tr>';
+      });
+
+      htmlTabla += '</tbody></table>';
+      contenido.innerHTML = htmlTabla;
+
+      // Hacer la tabla responsive
+      const tabla = document.querySelector('table');
+      hacerTablaResponsive(tabla);
+
+      // Asigna eventos a los botones de editar producto
+      if (endpointActual === "/api/productos") {
+        document.querySelectorAll(".btn-editar").forEach(btn => {
+          btn.onclick = function () {
+            editarProducto(btn.getAttribute("data-codigo"));
+          };
+        });
+        document.querySelectorAll(".btn-activar").forEach(btn => {
+          btn.onclick = function () {
+            activarInactivarProducto(btn.getAttribute("data-codigo"), btn.getAttribute("data-posipi"));
+          };
+        });
+      }
+    }
+
+    // Abrir modal para nuevo producto
+    document.getElementById("nuevo-producto").onclick = function(e) {
+      e.preventDefault();
+      document.getElementById("modal-titulo-producto").textContent = "Nuevo Producto";
+      document.getElementById("form-producto").reset();
+      document.getElementById("B1_COD").readOnly = false;
+      document.getElementById("modal-producto").classList.add("activo");
+    };
+
+    // Cerrar modal
+    function cerrarModalProducto() {
+      document.getElementById("modal-producto").classList.remove("activo");
+      document.getElementById("form-producto").onsubmit = crearProductoSubmit;
+    }
+
+    // Submit para crear producto (separado para poder restaurar)
+    async function crearProductoSubmit(e) {
+      e.preventDefault();
+
+      const data = {
+        B1_COD: document.getElementById("B1_COD").value.trim(),
+        B1_DESC: document.getElementById("B1_DESC").value.trim(),
+        B1_UM: document.getElementById("B1_UM").value.trim(),
+        B1_GRUPO: document.getElementById("B1_GRUPO").value.trim(),
+        B1_TIPO: document.getElementById("B1_TIPO").value.trim(),
+        B1_CODBAR: document.getElementById("B1_CODBAR").value.trim()
+      };
+
+      try {
+        const res = await fetch("/api/productos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Producto creado correctamente'
+          });
+          cerrarModalProducto();
+          cargarDatos("/api/productos", "Productos");
+        } else {
+          const error = await res.json();
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.msg || "No se pudo crear el producto"
+          });
+        }
+      } catch (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: "Error de red o servidor"
+        });
+      }
+    }
+
+    // Asigna el submit de crear por defecto
+    document.getElementById("form-producto").onsubmit = crearProductoSubmit;
+
+    // Función para editar producto (abre el modal con los datos)
+    function editarProducto(codigo) {
+      if (!codigo) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Código de producto no definido.'
+        });
+        return;
+      }
+      fetch(`/api/productos/${encodeURIComponent(codigo)}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+        .then(async res => {
+          if (!res.ok) {
+            Swal.fire({
+              icon: 'error',
+              title: 'No se encontró el producto o error en la consulta.'
+            });
+            return null;
+          }
+          return res.json();
+        })
+        .then(producto => {
+          if (!producto) return;
+          document.getElementById("modal-titulo-producto").textContent = "Modificar Producto";
+          document.getElementById("form-producto").reset();
+
+          document.getElementById("B1_COD").value = producto.B1_COD || "";
+          document.getElementById("B1_COD").readOnly = true;
+          document.getElementById("B1_DESC").value = producto.B1_DESC || "";
+          document.getElementById("B1_UM").value = producto.B1_UM || "";
+          document.getElementById("B1_GRUPO").value = producto.B1_GRUPO || "";
+          document.getElementById("B1_TIPO").value = producto.B1_TIPO || "";
+          document.getElementById("B1_CODBAR").value = producto.B1_CODBAR || "";
+
+          document.getElementById("modal-producto").classList.add("activo");
+
+          document.getElementById("form-producto").onsubmit = async function(ev) {
+            ev.preventDefault();
+
+            const data = {
+              B1_DESC: document.getElementById("B1_DESC").value.trim(),
+              B1_UM: document.getElementById("B1_UM").value.trim(),
+              B1_GRUPO: document.getElementById("B1_GRUPO").value.trim(),
+              B1_TIPO: document.getElementById("B1_TIPO").value.trim(),
+              B1_CODBAR: document.getElementById("B1_CODBAR").value.trim()
+            };
+
+            try {
+              const res = await fetch(`/api/productos/${encodeURIComponent(producto.B1_COD)}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+              });
+
+              if (res.ok) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Producto modificado correctamente'
+                });
+                cerrarModalProducto();
+                cargarDatos("/api/productos", "Productos");
+              } else {
+                const error = await res.json();
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: error.msg || "No se pudo modificar el producto"
+                });
+              }
+            } catch (err) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error de red o servidor"
+              });
+            }
+          };
+        });
+    }
+
+    // Función para activar/inactivar producto
+    function activarInactivarProducto(codigo, posipi) {
+      const nuevoEstado = posipi == 0 ? 1 : 0;
+      const accion = nuevoEstado == 1 ? "inactivar" : "activar";
+      Swal.fire({
+        title: `¿Seguro que desea ${accion} este producto?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/api/productos/${encodeURIComponent(codigo)}`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ B1_POSIPI: String(nuevoEstado) })
+          })
+            .then(res => res.json())
+            .then(resp => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: resp.msg || "Producto actualizado"
+              });
+              // Cambia el color de la fila inmediatamente
+              const fila = document.querySelector(`button[data-codigo="${codigo}"]`).closest("tr");
+              if (fila) {
+                if (nuevoEstado == 1) {
+                  fila.classList.add("producto-inactivo");
+                } else {
+                  fila.classList.remove("producto-inactivo");
+                }
+              }
+              // Luego recarga los datos para asegurar consistencia
+              cargarDatos("/api/productos", "Productos");
+            })
+            .catch(() => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al actualizar el producto"
+              });
+            });
+        }
+      });
+    }
+
+    // Agrega esta función utilitaria en tu <script> principal
+    function esProductoInactivo(row) {
+      // Devuelve true si el producto está inactivo (B1_POSIPI == "1")
+      return String(row.B1_POSIPI) === "1";
+    }
+
+    // Asignar eventos a los botones del menú
+    document.querySelectorAll('nav a[data-endpoint]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const endpoint = this.getAttribute('data-endpoint');
+        const titulo = this.textContent;
+        cargarDatos(endpoint, titulo);
+
+        // Limpiar intervalo anterior si existe
+        if (intervaloRefresco) clearInterval(intervaloRefresco);
+
+        // Establecer nuevo intervalo de refresco cada 30 segundos
+        intervaloRefresco = setInterval(() => {
+          cargarDatos(endpoint, titulo);
+        }, 30000);
+      });
+    });
+
+    // Manejar cambios de tamaño de pantalla
+    window.addEventListener('resize', () => {
+      const tabla = document.querySelector('table');
+      if (tabla) {
+        hacerTablaResponsive(tabla);
+      }
+    });
+  </script>
+</body>
+</html>
