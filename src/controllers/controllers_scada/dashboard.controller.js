@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../database/connection.js";
+import { getConnection, sql } from "../../database/connection.js";
 
 export const getOrdenes = async (req, res) => {
   try {

@@ -6,7 +6,7 @@ import {
   getProducciones,
   getRecetas,
   getProductos,
-} from "../controllers/dashboard.controller.js";
+} from "../controllers/controllers_scada/dashboard.controller.js";
 
 const router = Router();
 

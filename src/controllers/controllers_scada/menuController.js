@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../database/connection.js";
+import { getConnection, sql } from "../../database/connection.js";
 import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = 'CLAVE_SECRETA_CAMBIALA';

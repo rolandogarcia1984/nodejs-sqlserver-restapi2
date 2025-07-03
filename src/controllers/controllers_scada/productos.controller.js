@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../database/connection.js";
+import { getConnection, sql } from "../../database/connection.js";
 
 // Obtener todos los productos
 export const getAllProductos = async (req, res) => {

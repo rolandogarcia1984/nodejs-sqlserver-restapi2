@@ -1,4 +1,4 @@
-import { getConnection, sql } from "../database/connection.js";
+import { getConnection, sql } from "../../database/connection.js";
 
 // Obtener todas las reservas
 export const getAllReservas = async (req, res) => {

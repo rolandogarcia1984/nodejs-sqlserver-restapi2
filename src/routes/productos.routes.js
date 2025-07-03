@@ -1,5 +1,5 @@
 import { Router } from "express";
- import * as controller from '../controllers/productos.controller.js';
+ import * as controller from '../controllers/controllers_scada/productos.controller.js';
  const router = Router();
  router.post('/', controller.createProducto);
 router.get('/', controller.getAllProductos);

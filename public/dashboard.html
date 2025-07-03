@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +14,11 @@
       --color-fondo: #f4f4f4;
       --color-borde: #eaeaea;
       --color-hover: #005bb5;
-      --sombra: 0 2px 12px rgba(0,0,0,0.07);
+      --sombra: 0 2px 12px rgba(0, 0, 0, 0.07);
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
       min-height: 100vh;
       margin: 0;
@@ -64,13 +66,14 @@
       z-index: 99;
     }
 
-    nav a, .dropdown-productos > a {
+    nav a,
+    .dropdown-productos>a {
       text-decoration: none;
       background: #fff;
       padding: 0.5rem;
       border-radius: 5px;
       color: var(--color-texto);
-      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       font-size: 0.9rem;
       flex-grow: 1;
@@ -83,7 +86,8 @@
       display: inline-block;
     }
 
-    nav a:hover, .dropdown-productos > a:hover {
+    nav a:hover,
+    .dropdown-productos>a:hover {
       background: var(--color-primario);
       color: white;
     }
@@ -93,6 +97,7 @@
       position: relative;
       display: inline-block;
     }
+
     .dropdown-productos .dropdown-menu {
       display: none;
       position: absolute;
@@ -100,17 +105,19 @@
       top: 110%;
       min-width: 160px;
       background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
       border-radius: 6px;
       z-index: 1001;
       padding: 0.3rem 0;
       font-size: 0.97rem;
       transition: opacity 0.2s;
     }
+
     .dropdown-productos:hover .dropdown-menu,
     .dropdown-productos:focus-within .dropdown-menu {
       display: block;
     }
+
     .dropdown-menu a {
       display: block;
       padding: 0.6rem 1.2rem;
@@ -123,9 +130,11 @@
       text-align: left;
       border-radius: 0;
     }
+
     .dropdown-menu a:last-child {
       border-bottom: none;
     }
+
     .dropdown-menu a:hover {
       background: var(--color-primario);
       color: #fff;
@@ -196,14 +205,15 @@
       font-size: 0.9rem;
       flex-grow: 1;
       max-width: 150px;
-      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .acciones button:hover {
       background: var(--color-hover);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
+
     /* Estilos para el modal de productos */
     .modal {
       display: none;
@@ -214,23 +224,26 @@
       width: 100vw;
       height: 100vh;
       overflow: auto;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.3);
       justify-content: center;
       align-items: center;
     }
+
     .modal.activo {
       display: flex;
     }
+
     .modal-contenido {
       background: #fff;
       padding: 2rem 1.5rem 1.5rem 1.5rem;
       border-radius: 10px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
       min-width: 320px;
       max-width: 95vw;
       position: relative;
       text-align: left;
     }
+
     .modal-cerrar {
       position: absolute;
       top: 0.7rem;
@@ -241,11 +254,13 @@
       border: none;
       cursor: pointer;
     }
+
     .modal-contenido h2 {
       margin-top: 0;
       font-size: 1.2rem;
       color: var(--color-primario);
     }
+
     .modal-form label {
       display: block;
       margin-top: 1rem;
@@ -253,7 +268,9 @@
       font-weight: 500;
       color: #333;
     }
-    .modal-form input, .modal-form select {
+
+    .modal-form input,
+    .modal-form select {
       width: 100%;
       padding: 0.5rem;
       border-radius: 5px;
@@ -262,6 +279,7 @@
       margin-bottom: 0.5rem;
       box-sizing: border-box;
     }
+
     .modal-form button[type="submit"] {
       margin-top: 1rem;
       background: var(--color-primario);
@@ -273,13 +291,16 @@
       cursor: pointer;
       transition: background 0.2s;
     }
+
     .modal-form button[type="submit"]:hover {
       background: var(--color-hover);
     }
+
     .dropdown-productos {
       position: relative;
       display: inline-block;
     }
+
     .dropdown-menu {
       display: none;
       position: absolute;
@@ -287,12 +308,13 @@
       left: 0;
       background: #fff;
       min-width: 160px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
       border-radius: 6px;
       z-index: 1001;
       padding: 0.3rem 0;
       font-size: 0.97rem;
     }
+
     .dropdown-menu a {
       display: block;
       padding: 0.6rem 1.2rem;
@@ -303,18 +325,23 @@
       cursor: pointer;
       transition: background 0.2s;
     }
+
     .dropdown-menu a:last-child {
       border-bottom: none;
     }
+
     .dropdown-menu a:hover {
       background: var(--color-primario);
       color: #fff;
     }
+
     /* Ajusta el contenedor para scroll vertical */
     .tabla-container {
       flex: 1 1 auto;
-      height: 500px;         /* Puedes ajustar este valor según tu diseño */
-      max-height: 80vh;      /* O usa un porcentaje de la ventana */
+      height: 500px;
+      /* Puedes ajustar este valor según tu diseño */
+      max-height: 80vh;
+      /* O usa un porcentaje de la ventana */
       overflow-y: auto;
       margin: 0;
       width: 100%;
@@ -339,14 +366,15 @@
       border-collapse: collapse;
       font-size: 0.9rem;
       background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       /* border-radius: 0;  <-- Elimina o comenta esta línea */
       /* overflow: hidden;  <-- Elimina o comenta esta línea */
       margin: 0 auto;
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
-    th, td {
+    th,
+    td {
       padding: 0.75rem 0.5rem;
       border-bottom: 1px solid var(--color-borde);
       text-align: left;
@@ -361,7 +389,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     tbody tr:hover {
@@ -383,7 +411,8 @@
         gap: 0.2rem;
       }
 
-      nav a, .dropdown-productos > a {
+      nav a,
+      .dropdown-productos>a {
         font-size: 0.8rem;
         padding: 0.4rem;
         width: 100%;
@@ -424,7 +453,8 @@
         height: 100%;
       }
 
-      th, td {
+      th,
+      td {
         padding: 0.5rem 0.3rem;
         border-bottom: 1px solid var(--color-borde);
         text-align: left;
@@ -437,7 +467,7 @@
         border-collapse: collapse;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.563);
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         overflow: hidden;
         transition: background 0.3s ease, box-shadow 0.3s ease;
@@ -464,7 +494,7 @@
         font-size: 0.9rem;
         background: rgba(255, 255, 255, 0.8);
         border-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         margin-bottom: 0.5rem;
         transition: background 0.3s ease, box-shadow 0.3s ease;
       }
@@ -477,6 +507,7 @@
         text-align: left;
         flex: 1;
       }
+
       /* Dropdown en móviles */
       .dropdown-productos .dropdown-menu {
         min-width: 140px;
@@ -517,8 +548,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     /* Mensaje sin datos */
@@ -547,14 +583,17 @@
       border: 2px solid #ccc;
       box-shadow: 0 0 3px #888;
     }
+
     .semaforo-verde {
       background: #2ecc40;
       border-color: #27ae60;
     }
+
     .semaforo-amarillo {
       background: #ffeb3b;
       border-color: #fbc02d;
     }
+
     .semaforo-rojo {
       background: #ff4136;
       border-color: #c0392b;
@@ -575,14 +614,14 @@
   <!-- Agrega esto en el <head> si aún no tienes SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <header>
     <h1>Dashboard - SCADA / Protheus</h1>
   </header>
   <nav>
     <a href="#" data-endpoint="/api/ordenes">Órdenes</a>
-    <a href="#" data-endpoint="/api/producciones">Producciones</a>
-    <a href="#" data-endpoint="/api/recetas">Recetas</a>
+    <a href="#" data-endpoint="/api/reservas">Reservas</a>
     <div class="dropdown-productos">
       <a href="#" data-endpoint="/api/productos">Productos</a>
       <div class="dropdown-menu">
@@ -592,7 +631,8 @@
     <a href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
   </nav>
   <main>
-    <div id="mensaje-inicial" style="color:#888; margin:2rem 0;">Selecciona una opción del menú para ver los datos.</div>
+    <div id="mensaje-inicial" style="color:#888; margin:2rem 0;">Selecciona una opción del menú para ver los datos.
+    </div>
     <div class="datatable-search" id="busqueda" style="display:none;">
       <!-- Caja de búsqueda eliminada -->
     </div>
@@ -704,14 +744,14 @@
     // Convertir tabla a formato responsive para móviles
     function hacerTablaResponsive(tabla) {
       if (window.innerWidth > 768) return tabla;
-      
+
       const headers = [];
       const thead = tabla.querySelector('thead');
       if (thead) {
         const ths = thead.querySelectorAll('th');
         ths.forEach(th => headers.push(th.textContent));
       }
-      
+
       const tbody = tabla.querySelector('tbody');
       if (tbody) {
         const rows = tbody.querySelectorAll('tr');
@@ -724,7 +764,7 @@
           });
         });
       }
-      
+
       tabla.classList.add('responsive-table');
       return tabla;
     }
@@ -750,6 +790,11 @@
         htmlTabla += `<th>Acciones</th>`;
       } else if (endpointActual === "/api/ordenes") {
         htmlTabla += `<th></th>`;
+        headers.forEach(header => {
+          htmlTabla += `<th>${header}</th>`;
+        });
+      } else if (endpointActual === "/api/reservas") {
+        htmlTabla += `<th>#</th>`;
         headers.forEach(header => {
           htmlTabla += `<th>${header}</th>`;
         });
@@ -791,7 +836,10 @@
         headers.forEach(header => {
           htmlTabla += `<td>${row[header] ?? '-'}</td>`;
         });
-
+        // Nueva columna para reservas
+        if (endpointActual === "/api/reservas") {
+          htmlTabla += `<td>${idx + 1}</td>`;
+        }
         // Acciones solo para productos
         if (endpointActual === "/api/productos") {
           htmlTabla += `<td>
@@ -828,7 +876,7 @@
     }
 
     // Abrir modal para nuevo producto
-    document.getElementById("nuevo-producto").onclick = function(e) {
+    document.getElementById("nuevo-producto").onclick = function (e) {
       e.preventDefault();
       document.getElementById("modal-titulo-producto").textContent = "Nuevo Producto";
       document.getElementById("form-producto").reset();
@@ -931,7 +979,7 @@
 
           document.getElementById("modal-producto").classList.add("activo");
 
-          document.getElementById("form-producto").onsubmit = async function(ev) {
+          document.getElementById("form-producto").onsubmit = async function (ev) {
             ev.preventDefault();
 
             const data = {
@@ -1036,7 +1084,7 @@
 
     // Asignar eventos a los botones del menú
     document.querySelectorAll('nav a[data-endpoint]').forEach(link => {
-      link.addEventListener('click', function(e) {
+      link.addEventListener('click', function (e) {
         e.preventDefault();
         const endpoint = this.getAttribute('data-endpoint');
         const titulo = this.textContent;
@@ -1061,4 +1109,5 @@
     });
   </script>
 </body>
+
 </html>
