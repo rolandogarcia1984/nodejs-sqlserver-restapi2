@@ -1,6 +1,6 @@
 // routes/ordenes.routes.js
 import { Router } from 'express';
-import * as controller from '../controllers/controllers_scada/ordenes.controller.js';
+import * as controller from '../../controllers/controllers_scada/ordenes.controller.js';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
  // routes/reservas.routes.js
 import { Router } from 'express';
-import * as controller from '../controllers/controllers_scada/reservas.controller.js';
+import * as controller from '../../controllers/controllers_scada/reservas.controller.js';
 
 const router = Router();
 

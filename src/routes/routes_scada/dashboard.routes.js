@@ -1,12 +1,12 @@
 // routes/dashboard.routes.js
 import { Router } from "express";
-import { validarJWT } from "../middlewares/jwt.js";
+import { validarJWT } from "../../middlewares/jwt.js";
 import {
   getOrdenes,
   getProducciones,
   getRecetas,
   getProductos,
-} from "../controllers/controllers_scada/dashboard.controller.js";
+} from "../../controllers/controllers_scada/dashboard.controller.js";
 
 const router = Router();
 
