@@ -794,7 +794,7 @@
           htmlTabla += `<th>${header}</th>`;
         });
       } else if (endpointActual === "/api/reservas") {
-        htmlTabla += `<th>#</th>`;
+     
         headers.forEach(header => {
           htmlTabla += `<th>${header}</th>`;
         });
@@ -836,10 +836,7 @@
         headers.forEach(header => {
           htmlTabla += `<td>${row[header] ?? '-'}</td>`;
         });
-        // Nueva columna para reservas
-        if (endpointActual === "/api/reservas") {
-          htmlTabla += `<td>${idx + 1}</td>`;
-        }
+        
         // Acciones solo para productos
         if (endpointActual === "/api/productos") {
           htmlTabla += `<td>
