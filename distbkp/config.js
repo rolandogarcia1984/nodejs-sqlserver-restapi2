@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DB_DATABASE_MS = exports.DB_SERVER_MS = exports.DB_PASSWORD_MS = exports.DB_USER_MS = exports.PORT_MS = void 0;
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
+exports.PORT_MS = process.env.PORT || 4000;
+exports.DB_USER_MS = process.env.DB_USER || "prodpar";
+exports.DB_PASSWORD_MS = process.env.DB_PASSWORD || "Dkp*5678$";
+exports.DB_SERVER_MS = process.env.DB_SERVER || "192.168.41.232\\WINCC";
+exports.DB_DATABASE_MS = process.env.DB_DATABASE || "AxFertimaxFrontera";

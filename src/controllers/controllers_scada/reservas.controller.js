@@ -10,16 +10,15 @@ export const getAllReservas = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-
-// Obtener una reserva por ID
-export const getReservaById = async (req, res) => {
-  const { id } = req.params;
+// Obtener una reserva por OP
+export const getReservaByOp = async (req, res) => {
+  const { op } = req.params;
   try {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .input("ID", sql.Int, id)
-      .query("SELECT * FROM ReservasProductos WHERE ID = @ID");
+      .input("D4_OP", sql.varchar, op)
+      .query("SELECT * FROM ReservasProductos WHERE D4_OP = @D4_OP");
 
     if (!result.recordset[0]) return res.status(404).json({ msg: "Reserva no encontrada" });
     res.json(result.recordset[0]);
@@ -27,6 +26,7 @@ export const getReservaById = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
 
 // Crear nueva reserva
 export const createReserva = async (req, res) => {

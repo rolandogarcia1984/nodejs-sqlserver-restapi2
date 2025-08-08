@@ -18,8 +18,8 @@ export const getProductoByCodigo = async (req, res) => {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .input("B1_COD", sql.VarChar, codigo)
-      .query("SELECT * FROM Productos WHERE B1_COD = @B1_COD");
+      .input("B1_COD", sql.VarChar, codigo )
+      .query("SELECT * FROM Productos WHERE B1_COD =  @B1_COD ");
 
     if (!result.recordset[0])
       return res.status(404).json({ msg: "Producto no encontrado" });
@@ -40,7 +40,7 @@ export const createProducto = async (req, res) => {
     B1_POSIPI,
     B1_CODBAR
   } = req.body;
-
+ 
   if (!B1_COD || !B1_DESC) {
     return res.status(400).json({ msg: "B1_COD y B1_DESC son obligatorios" });
   }

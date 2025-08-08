@@ -39,8 +39,11 @@ export const createOrden = async (req, res) => {
     C2_EMISSAO,
     C2_DATPRF,
     C2_CC,
+    Estado, 
+    Observaciones
   } = req.body;
 
+   
   if (!C2_NUM || !C2_FILIAL || !C2_PRODUTO || C2_QUANT == null) {
     return res.status(400).json({ msg: "Campos obligatorios faltantes" });
   }
@@ -56,11 +59,13 @@ export const createOrden = async (req, res) => {
       .input("C2_QUJE", sql.Decimal(18, 4), C2_QUJE ?? 0)
       .input("C2_EMISSAO", sql.Date, C2_EMISSAO)
       .input("C2_DATPRF", sql.Date, C2_DATPRF)
-      .input("C2_CC", sql.VarChar, C2_CC)
+      .input("C2_CC", sql.VarChar, C2_CC) 
+      .input("Estado", sql.VarChar, Estado) 
+      .input("Observaciones", sql.VarChar, Observaciones)
       .query(
         `INSERT INTO OrdenesProduccion 
-         (C2_FILIAL, C2_NUM, C2_PRODUTO, C2_QUANT, C2_QUJE, C2_EMISSAO, C2_DATPRF, C2_CC)
-         VALUES (@C2_FILIAL, @C2_NUM, @C2_PRODUTO, @C2_QUANT, @C2_QUJE, @C2_EMISSAO, @C2_DATPRF, @C2_CC)`
+         (C2_FILIAL, C2_NUM, C2_PRODUTO, C2_QUANT, C2_QUJE, C2_EMISSAO, C2_DATPRF, C2_CC , Estado , Observaciones)
+         VALUES (@C2_FILIAL, @C2_NUM, @C2_PRODUTO, @C2_QUANT, @C2_QUJE, @C2_EMISSAO, @C2_DATPRF, @C2_CC , @Estado , @Observaciones )`
       );
 
     res.status(201).json({ msg: "Orden creada exitosamente" });

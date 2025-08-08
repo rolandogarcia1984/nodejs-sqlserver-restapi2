@@ -5,7 +5,7 @@ import * as controller from '../../controllers/controllers_scada/reservas.contro
 const router = Router();
 
 router.get('/', controller.getAllReservas);
-router.get('/:id', controller.getReservaById);
+router.get('/:id', controller.getReservaByOp);
 router.post('/', controller.createReserva);
 router.put('/:id', controller.updateReserva);
 router.delete('/:id', controller.deleteReserva);
