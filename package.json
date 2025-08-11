@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node dist/index.js",
@@ -17,7 +17,8 @@
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
-    "mssql": "^10.0.2"
+    "mssql": "^10.0.2",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.0",

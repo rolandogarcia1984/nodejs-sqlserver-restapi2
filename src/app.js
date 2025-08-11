@@ -4,10 +4,12 @@ import morgan from "morgan";
  
 import productosRoutes from "./routes/routes_scada/productos.routes.js";
 import ordenesRoutes from "./routes/routes_scada/ordenes.routes.js";
-import reservasRoutes from "./routes/routes_scada/reservas.routes.js";   
+import reservasRoutes from "./routes/routes_scada/reservas.routes.js";
 import authRoutes from "./routes/routes_scada/authRoutes.js"; // Importa las rutas de autenticación
 import dashboardRoutes from "./routes/routes_scada/dashboard.routes.js";
 
+// Ciaweb
+import programacionesRoutes from "./routes/routes_ciaweb/programaciones.routes.js";
 
 import dotenv from "dotenv";
 
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use("/api/productos", productosRoutes);
 app.use("/api/ordenes", ordenesRoutes);
 app.use("/api/reservas", reservasRoutes);
+app.use("/api/programaciones", programacionesRoutes);
 app.use("/api", authRoutes); // Usa las rutas de autenticación
 app.use("/api", dashboardRoutes);
 
