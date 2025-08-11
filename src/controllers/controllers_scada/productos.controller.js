@@ -4,10 +4,13 @@ import { getConnection, sql } from "../../database/connection.js";
 export const getAllProductos = async (req, res) => {
   try {
     const pool = await getConnection();
+    // console.log(pool)
     const result = await pool.request().query("SELECT B1_COD CODIGO , B1_DESC DESCRIPCION , B1_TIPO TIPO , B1_UM UNIDAD  FROM Productos");
     res.json(result.recordset);
   } catch (error) {
     res.status(500).send(error.message);
+    // console.log(error);
+    
   }
 };
 

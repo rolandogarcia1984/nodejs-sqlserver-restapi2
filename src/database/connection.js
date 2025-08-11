@@ -29,6 +29,10 @@ export const getConnection = async () => {
   }
 };
 
+// sql.connect(dbSettings)
+//    .then(() => console.log('✅ Conexión MSSQL OK'))
+//    .catch(err => console.error('❌ Error MSSQL:', err));
+
 // PostgreSQL
 export const postgres = {
   database: process.env.DB_DATABASE_PG,
