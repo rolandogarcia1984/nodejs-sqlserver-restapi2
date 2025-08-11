@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "CommonJS",
+    "module": "ES2020",              // 👈 ahora es ESM
+    "moduleResolution": "node",      // 👈 para resolver imports como en Node
     "rootDir": "./src",
     "outDir": "./dist",
-    "allowJs": true,          // 👈 permite archivos .js
-    "checkJs": false,         // 👈 no reporta errores en .js
+    "allowJs": true,
+    "checkJs": false,
     "strict": false,
     "esModuleInterop": true
   },
