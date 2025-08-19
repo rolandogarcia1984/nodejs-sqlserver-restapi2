@@ -4,7 +4,10 @@ import * as controller from '../../controllers/controllers_ciaweb/programaciones
 
 const router = Router();
 
+// Obtener programaciones en estado (PROGRAMADO)
 router.get('/', controller.getProgramaciones);
+
+// Actualizar a estado (PREPARANDO)
 router.put('/:programacionId', controller.updateProgramacion);
 
 export default router;
