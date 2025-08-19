@@ -5,5 +5,6 @@ import * as controller from '../../controllers/controllers_ciaweb/programaciones
 const router = Router();
 
 router.get('/', controller.getProgramaciones);
+router.put('/:programacionId', controller.updateProgramacion);
 
 export default router;
