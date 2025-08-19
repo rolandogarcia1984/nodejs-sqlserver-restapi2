@@ -41,7 +41,11 @@ export const createProducto = async (req, res) => {
     B1_GRUPO,
     B1_TIPO,
     B1_POSIPI,
-    B1_CODBAR
+    B1_CODBAR,
+    B1_PL1,
+    B1_PL2,
+    B1_PL3,
+    B1_PL4
   } = req.body;
  
   if (!B1_COD || !B1_DESC) {
@@ -58,9 +62,13 @@ export const createProducto = async (req, res) => {
       .input("B1_TIPO", sql.VarChar, B1_TIPO)
       .input("B1_POSIPI", sql.VarChar, B1_POSIPI)
       .input("B1_CODBAR", sql.VarChar, B1_CODBAR)
+      .input("B1_PL1", sql.VarChar, B1_PL1)
+      .input("B1_PL2", sql.VarChar, B1_PL2)
+      .input("B1_PL3", sql.VarChar, B1_PL3)
+      .input("B1_PL4", sql.VarChar, B1_PL4)
       .query(`
-        INSERT INTO Productos (B1_COD, B1_DESC, B1_UM, B1_GRUPO, B1_TIPO, B1_POSIPI, B1_CODBAR)
-        VALUES (@B1_COD, @B1_DESC, @B1_UM, @B1_GRUPO, @B1_TIPO, @B1_POSIPI, @B1_CODBAR)
+        INSERT INTO Productos (B1_COD, B1_DESC, B1_UM, B1_GRUPO, B1_TIPO, B1_POSIPI, B1_CODBAR, B1_PL1, B1_PL2, B1_PL3, B1_PL4)
+        VALUES (@B1_COD, @B1_DESC, @B1_UM, @B1_GRUPO, @B1_TIPO, @B1_POSIPI, @B1_CODBAR, @B1_PL1, @B1_PL2, @B1_PL3, @B1_PL4)
       `);
 
     res.status(201).json({ msg: "Producto creado" });
@@ -78,7 +86,11 @@ export const updateProducto = async (req, res) => {
     B1_GRUPO,
     B1_TIPO,
     B1_POSIPI,
-    B1_CODBAR
+    B1_CODBAR,
+    B1_PL1,
+    B1_PL2,
+    B1_PL3,
+    B1_PL4
   } = req.body;
 
   try {
@@ -91,6 +103,10 @@ export const updateProducto = async (req, res) => {
       .input("B1_TIPO", sql.VarChar, B1_TIPO)
       .input("B1_POSIPI", sql.VarChar, B1_POSIPI)
       .input("B1_CODBAR", sql.VarChar, B1_CODBAR)
+      .input("B1_PL1", sql.VarChar, B1_PL1)
+      .input("B1_PL2", sql.VarChar, B1_PL2)
+      .input("B1_PL3", sql.VarChar, B1_PL3)
+      .input("B1_PL4", sql.VarChar, B1_PL4)
       .query(`
         UPDATE Productos
         SET B1_DESC = @B1_DESC,
@@ -98,7 +114,11 @@ export const updateProducto = async (req, res) => {
             B1_GRUPO = @B1_GRUPO,
             B1_TIPO = @B1_TIPO,
             B1_POSIPI = @B1_POSIPI,
-            B1_CODBAR = @B1_CODBAR
+            B1_CODBAR = @B1_CODBAR,
+            B1_PL1 = @B1_PL1,
+            B1_PL2 = @B1_PL2,
+            B1_PL3 = @B1_PL3,
+            B1_PL4 = @B1_PL4
         WHERE B1_COD = @B1_COD
       `);
 
