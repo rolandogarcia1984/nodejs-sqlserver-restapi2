@@ -3,7 +3,7 @@ import { getPostgresConnection } from "../../database/connection.js";
 // Obtener todas las programaciones en estado 2 (PROGRAMADO)
 export const getProgramaciones = async (req, res) => {
   try {
-    const query = `SELECT "programacionId", ruc, "codPedido", item, "codProducto", cantidad FROM public."Programaciones" WHERE "estadoId" = 2 ORDER BY "createdAt" ASC`;
+    const query = `SELECT "programacionId", "tipoEntrega", ruc, "codPedido", item, "codProducto", cantidad FROM public."Programaciones" WHERE "estadoId" IN (1,2) ORDER BY "createdAt" ASC`;
 
     const pool = await getPostgresConnection();
     const result = await pool.query(query);
@@ -15,12 +15,13 @@ export const getProgramaciones = async (req, res) => {
   }
 };
 
+
 // Actualiza a estado (PREPARANDO) una programación por su ID
 export const updateProgramacion = async (req, res) => {
   const programacionId = parseInt(req.params.programacionId);
 
-  // Se busca la programación por su ID y en estado (PROGRAMADO)
-  const query = `SELECT * FROM public."Programaciones" WHERE "programacionId" = $1 AND "estadoId" = 2`;
+  // Se busca la programación por su ID y en estado (PROGRAMADO) o (SOLICITADO)
+  const query = `SELECT * FROM public."Programaciones" WHERE "programacionId" = $1 AND "estadoId" IN (1,2)`;
   const pool = await getPostgresConnection();
   const programacionFound = await pool.query(query, [programacionId]);
 
