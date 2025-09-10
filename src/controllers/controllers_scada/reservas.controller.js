@@ -10,18 +10,18 @@ export const getAllReservas = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-// Obtener una reserva por OP
+// Obtener reservas por OP 
 export const getReservaByOp = async (req, res) => {
-  const { op } = req.params;
+  const { id } = req.params;
   try {
     const pool = await getConnection();
     const result = await pool
       .request()
-      .input("D4_OP", sql.varchar, op)
+      .input("D4_OP", sql.VarChar, id)
       .query("SELECT * FROM ReservasProductos WHERE D4_OP = @D4_OP");
 
     if (!result.recordset[0]) return res.status(404).json({ msg: "Reserva no encontrada" });
-    res.json(result.recordset[0]);
+    res.json(result.recordset);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -38,7 +38,8 @@ export const createReserva = async (req, res) => {
     D4_QTDEORI,
     D4_DATA,
     D4_OP,
-    D4_PRODUTO
+    D4_PRODUTO,
+    D4_EXTRAS 
   } = req.body;
 
   if (!D4_FILIAL || !D4_COD || !D4_LOCAL || D4_QUANT == null || D4_DATA == null || !D4_OP || !D4_PRODUTO) {
@@ -57,11 +58,11 @@ export const createReserva = async (req, res) => {
       .input("D4_DATA", sql.Date, D4_DATA)
       .input("D4_OP", sql.VarChar, D4_OP)
       .input("D4_PRODUTO", sql.VarChar, D4_PRODUTO)
-   
+      .input("D4_EXTRAS", sql.VarChar, D4_EXTRAS)
       .query(`
         INSERT INTO ReservasProductos 
-        (D4_FILIAL, D4_COD, D4_LOCAL, D4_QUANT, D4_QTDEORI, D4_DATA, D4_OP, D4_PRODUTO)
-        VALUES (@D4_FILIAL, @D4_COD, @D4_LOCAL, @D4_QUANT, @D4_QTDEORI, @D4_DATA, @D4_OP, @D4_PRODUTO);
+        (D4_FILIAL, D4_COD, D4_LOCAL, D4_QUANT, D4_QTDEORI, D4_DATA, D4_OP, D4_PRODUTO, D4_EXTRAS)
+        VALUES (@D4_FILIAL, @D4_COD, @D4_LOCAL, @D4_QUANT, @D4_QTDEORI, @D4_DATA, @D4_OP, @D4_PRODUTO, @D4_EXTRAS);
         SELECT SCOPE_IDENTITY() AS id
       `);
 

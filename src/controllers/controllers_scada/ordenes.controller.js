@@ -4,7 +4,7 @@ import { getConnection, sql } from "../../database/connection.js";
 export const getAllOrdenes = async (req, res) => {
   try {
     const pool = await getConnection();
-    const result = await pool.request().query("SELECT C2_NUM OP , C2_PRODUTO PRODUCTO , C2_QUANT CANTIDAD , C2_QUJE PRODUCIDO , FORMAT(C2_EMISSAO,'dd/MM/yyyy') EMISION   FROM OrdenesProduccion ORDER BY C2_NUM DESC");
+    const result = await pool.request().query("SELECT * FROM OrdenesProduccion ORDER BY C2_NUM DESC");
     res.json(result.recordset);
   } catch (error) {
     res.status(500).send(error.message);
@@ -78,13 +78,8 @@ export const createOrden = async (req, res) => {
 export const updateOrden = async (req, res) => {
   const { id } = req.params;
   const {
-    C2_FILIAL,
-    C2_PRODUTO,
+    C2_QTDNETO,
     C2_QUANT,
-    C2_QUJE,
-    C2_EMISSAO,
-    C2_DATPRF,
-    C2_CC,
   } = req.body;
 
   try {
@@ -92,23 +87,14 @@ export const updateOrden = async (req, res) => {
     const result = await pool
       .request()
       .input("C2_NUM", sql.VarChar, id)
-      .input("C2_FILIAL", sql.VarChar, C2_FILIAL)
-      .input("C2_PRODUTO", sql.VarChar, C2_PRODUTO)
+      .input("C2_QTDNETO", sql.Decimal(18, 4), C2_QTDNETO)
       .input("C2_QUANT", sql.Decimal(18, 4), C2_QUANT)
-      .input("C2_QUJE", sql.Decimal(18, 4), C2_QUJE)
-      .input("C2_EMISSAO", sql.Date, C2_EMISSAO)
-      .input("C2_DATPRF", sql.Date, C2_DATPRF)
-      .input("C2_CC", sql.VarChar, C2_CC)
       .query(
-        `UPDATE OrdenesProduccion
-         SET C2_FILIAL = @C2_FILIAL, 
-             C2_PRODUTO = @C2_PRODUTO, 
-             C2_QUANT = @C2_QUANT, 
-             C2_QUJE = @C2_QUJE, 
-             C2_EMISSAO = @C2_EMISSAO, 
-             C2_DATPRF = @C2_DATPRF, 
-             C2_CC = @C2_CC
-         WHERE C2_NUM = @C2_NUM`
+        ` UPDATE OrdenesProduccion
+          SET 
+             C2_QTDNETO = @C2_QTDNETO ,
+             C2_QUANT   = @C2_QUANT
+             WHERE C2_NUM = @C2_NUM`
       );
 
     if (result.rowsAffected[0] === 0)
@@ -136,17 +122,5 @@ export const deleteOrden = async (req, res) => {
     res.sendStatus(204);
   } catch (error) {
     res.status(500).send(error.message);
-  }
-};
-export const getOrdenes = async (req, res) => {
-  try {
-    const pool = await getConnection();
-    const result = await pool.request()
-      .query("select * from OrdenesProduccion "); 
-
-    res.json(result.recordset);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al obtener órdenes de producción." });
   }
 };
