@@ -1,6 +1,7 @@
 import { getConnection, sql } from "../../database/connection.js";
 
 // Obtener todos los productos
+//prueba
 export const getAllProductos = async (req, res) => {
   try {
     const pool = await getConnection();
