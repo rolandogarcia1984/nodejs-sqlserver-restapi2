@@ -87,13 +87,14 @@ export const updateProgramacion = async (req, res) => {
   // Si se encuentra se actualiza el estado a 3 (PREPARANDO)
   try {
     const programacionFound = programaciones.rows[0];
-    const query = `UPDATE public."Programaciones" SET "estadoId" = $1 WHERE "programacionId" = $2`;
+    const estadoValidado = 10;
+    const query = `UPDATE public."Programaciones" SET "estadoId" = $1, "validadoFluig" = true WHERE "programacionId" = $2`;
     const pool = await getPostgresConnection();
-    const result = await pool.query(query, [3, programacionId]);
+    const result = await pool.query(query, [estadoValidado, programacionId]);
 
     // Insertar registro de auditoria en tabla "AuditoriasPE"
     const queryAuditoria = `INSERT INTO public."AuditoriasPE"("campoModificado", "valorAnterior", "valorActual", "usuarioResponsable", "programacionId", "createdAt", "updatedAt")
-	VALUES ('estadoId','${programacionFound.estadoId}','3','fluig', ${programacionId}, CURRENT_DATE, CURRENT_DATE)`;
+	VALUES ('estadoId','${programacionFound.estadoId}','${estadoValidado}','fluig', ${programacionId}, CURRENT_DATE, CURRENT_DATE)`;
     const resultAuditoria = await pool.query(queryAuditoria);
     
     // Respuesta
