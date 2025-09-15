@@ -77,19 +77,26 @@ export const updateProgramacion = async (req, res) => {
   // Se busca la programación por su ID y en estado (PROGRAMADO) o (SOLICITADO)
   const query = `SELECT * FROM public."Programaciones" WHERE "programacionId" = $1 AND "estadoId" IN (1,2)`;
   const pool = await getPostgresConnection();
-  const programacionFound = await pool.query(query, [programacionId]);
+  const programaciones = await pool.query(query, [programacionId]);
 
   // Si no se encuentra retorna un error 404
-  if (programacionFound.rowCount === 0) {
+  if (programaciones.rowCount === 0) {
     return res.status(404).json({ error: "Programación estado (PROGRAMADO) o (SOLICITADO) no encontrada" });
   }
 
   // Si se encuentra se actualiza el estado a 3 (PREPARANDO)
   try {
+    const programacionFound = programaciones.rows[0];
     const query = `UPDATE public."Programaciones" SET "estadoId" = $1 WHERE "programacionId" = $2`;
     const pool = await getPostgresConnection();
     const result = await pool.query(query, [3, programacionId]);
 
+    // Insertar registro de auditoria en tabla "AuditoriasPE"
+    const queryAuditoria = `INSERT INTO public."AuditoriasPE"("campoModificado", "valorAnterior", "valorActual", "usuarioResponsable", "programacionId", "createdAt", "updatedAt")
+	VALUES ('estadoId','${programacionFound.estadoId}','3','fluig', ${programacionId}, CURRENT_DATE, CURRENT_DATE)`;
+    const resultAuditoria = await pool.query(queryAuditoria);
+    
+    // Respuesta
     res.json({ message: "Programación actualizada exitosamente" });
   } catch (error) {
     console.error(error);
